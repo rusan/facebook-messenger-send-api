@@ -205,7 +205,7 @@ class SendAPI {
       $options['form_params']['tag'] = $this->tag;
     }
 
-    return $this->guzzle()->post('https://graph.facebook.com/v2.6/me/messages?access_token=' . $this->accessToken, $options);
+    return $this->guzzle()->post('https://graph.facebook.com/v6.0/me/messages?access_token=' . $this->accessToken, $options);
   }
 
   /**
