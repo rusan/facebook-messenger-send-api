@@ -2,42 +2,9 @@
 
 namespace FacebookMessengerSendApi;
 
-use FacebookMessengerSendApi\Buttons\FacebookButtons;
-use FacebookMessengerSendApi\ContentType\FacebookContentType;
-use FacebookMessengerSendApi\Templates\FacebookTemplates;
 use GuzzleHttp\Client;
 
 class SendAPI {
-
-  /**
-   * @var FacebookContentType
-   */
-  public $contentType;
-
-  /**
-   * @var FacebookButtons
-   */
-  public $buttons;
-
-  /**
-   * @var FacebookTemplates
-   */
-  public $templates;
-
-  /**
-   * @var QuickReplies
-   */
-  public $quickReplies;
-
-  /**
-   * @var QuickReply
-   */
-  public $quickReply;
-
-  /**
-   * @var AttachmentUploadAPI
-   */
-  public $attachmentUploadAPI;
 
   /**
    * The access token of the app.
@@ -59,18 +26,6 @@ class SendAPI {
    * @var string
    */
   protected $tag;
-
-  /**
-   * SendAPI constructor.
-   */
-  public function __construct() {
-    $this->contentType = new FacebookContentType();
-    $this->buttons = new FacebookButtons();
-    $this->templates = new FacebookTemplates();
-    $this->quickReplies = new QuickReplies();
-    $this->quickReply = new QuickReply();
-    $this->attachmentUploadAPI = new AttachmentUploadAPI();
-  }
 
   /**
    * Get the access token.
@@ -177,6 +132,23 @@ class SendAPI {
   }
 
   /**
+   * Send attachment to save
+   *
+   * @param Templates\Attachment $attachment
+   *
+   * @return \Psr\Http\Message\ResponseInterface
+   */
+  public function sendAttachment(Templates\Attachment $attachment) {
+    $options = [
+      'json' => [
+        'message' => $attachment->getData()
+      ]
+    ];
+
+    return $this->guzzle()->post('https://graph.facebook.com/v6.0/me/message_attachments?access_token=' . $this->accessToken, $options);
+  }
+
+  /**
    * Sending to the facebook messenger some payload.
    *
    * It could be a message with attachment or or a sender action.
@@ -206,37 +178,6 @@ class SendAPI {
     }
 
     return $this->guzzle()->post('https://graph.facebook.com/v6.0/me/messages?access_token=' . $this->accessToken, $options);
-  }
-
-  /**
-   * Extracting information from the request.
-   *
-   * @param \stdClass $request
-   *   The request object.
-   *
-   * @return array
-   *   Array of the request.
-   */
-  protected function extractFacebookRequest(\stdClass $request) {
-    $payload = $request->entry[0];
-    $message = $payload->messaging[0];
-
-    $payload = [
-      'id' => $payload->id,
-      'time' => $payload->time,
-      'sender' => $message->sender->id,
-      'recipient' => $message->recipient->id,
-      'text' => $message->message->text,
-      'mid' => $message->message->mid,
-      'seq' => $message->message->seq,
-    ];
-
-    if (!empty($message->postback)) {
-      // This is a post back button. Add it to the payload variable.
-      $payload['postback'] = $message->postback->payload;
-    }
-
-    return $payload;
   }
 
   /**

@@ -6,7 +6,7 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$facebook = new FacebookMessengerSendApi\SendAPI();
+$API = new \FacebookMessengerSendApi\SendAPI();
 
 // The app access token.
 $access_token = '';
@@ -14,12 +14,36 @@ $access_token = '';
 // The user recipient ID.
 $recipient = 0;
 
-$facebook
+$API
   ->setAccessToken($access_token)
   ->setRecipientId($recipient);
 
-$message = $facebook->contentType->text->text('message');
+$Attachment = new \FacebookMessengerSendApi\Templates\Attachment();
 
-$facebook
-  ->sendMessage($message);
+$Attachment
+    ->type('image')
+    ->url('https://media.giphy.com/media/tGbhyv8Wmi4EM/giphy.gif')
+    ->isReusable(true);
+
+$result = $API
+    ->sendAttachment($Attachment);
+$attachment = json_decode($result->getBody(), 1);
+
+$Button = new \FacebookMessengerSendApi\Buttons\Url();
+$Button
+    ->url('https://pomogisviborom.ru')
+    ->title('А вот тут текст ответа');
+
+$Element = new \FacebookMessengerSendApi\Templates\Element();
+$Element
+    ->mediaType('image')
+    ->attachmentId($attachment['attachment_id'])
+    ->addButton($Button);
+
+$Media = new \FacebookMessengerSendApi\Templates\Media();
+$Media->sharable(true);
+$Media->addElement($Element);
+
+$result = $API->sendMessage($Media);
+print_r($result);
 

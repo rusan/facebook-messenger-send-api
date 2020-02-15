@@ -9,14 +9,14 @@ use FacebookMessengerSendApi\SendAPITransform;
  *
  * @see https://developers.facebook.com/docs/messenger-platform/send-api-reference/generic-template
  */
-class Generic extends SendAPITransform {
+class Media extends SendAPITransform {
 
   /**
    * Generic constructor.
    */
   public function __construct() {
     $this->data['attachment']['type'] = 'template';
-    $this->data['attachment']['payload']['template_type'] = 'generic';
+    $this->data['attachment']['payload']['template_type'] = 'media';
   }
 
   /**
@@ -35,21 +35,6 @@ class Generic extends SendAPITransform {
   }
 
   /**
-   * Set image aspect ratio.
-   *
-   * @param $image_aspect_ratio
-   *   Aspect ratio used to render images specified by image_url in element
-   *   objects. Must be horizontal or square. Defaults to horizontal.
-   *
-   * @return $this
-   */
-  public function imageAspectRatio($image_aspect_ratio) {
-    $this->data['attachment']['payload']['image_aspect_ratio'] = $image_aspect_ratio;
-
-    return $this;
-  }
-
-  /**
    * Set the element.
    *
    * @param Element $element
@@ -62,5 +47,4 @@ class Generic extends SendAPITransform {
 
     return $this;
   }
-
 }

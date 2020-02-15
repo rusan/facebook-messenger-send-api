@@ -1,13 +1,14 @@
 <?php
 
-namespace FacebookMessengerSendApi;
+namespace FacebookMessengerSendApi\Templates;
 
+use FacebookMessengerSendApi\SendAPITransform;
 /**
- * Class QuickReplies
+ * Class Element
  *
  * @see https://developers.facebook.com/docs/messenger-platform/send-api-reference/attachment-upload
  */
-class AttachmentUploadAPI extends SendAPITransform {
+class Attachment extends SendAPITransform {
 
   /**
    * Set the type.

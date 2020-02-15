@@ -53,6 +53,18 @@ class Element extends SendAPITransform {
     return $this;
   }
 
+  public function mediaType($media_type) {
+    $this->data['media_type'] = $media_type;
+
+    return $this;
+  }
+
+  public function attachmentId($attachment_id) {
+    $this->data['attachment_id'] = $attachment_id;
+
+    return $this;
+  }
+
   /**
    * Set the default action.
    *
